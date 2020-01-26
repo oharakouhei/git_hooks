@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# If branch name starts with {UPPERCASE-NUMBER_}, put the {UPPERCASE-NUMBER:} at the beginning at the commit message
+# Put this script to .git/hooks/commit-msg
+# branch名が {大文字-数字}_ から始まる場合は commit message の先頭に {大文字-数字}: を追加してくれる
+
+if [ "$2" == "" ] ; then
+    mv $1 $1.tmp
+    ticket_id=$(git branch | grep "*" | awk '{print $2}' | sed -e "s/^\([A-Z]*-[0-9]*\)_.*/\1/g")
+    if [ -n "$ticket_id" ]; then
+        echo -n "$ticket_id: " >> $1
+    fi
+    cat $1.tmp >> $1
+fi
